@@ -3,11 +3,13 @@ const router = express.Router()
 const multer = require('multer');
 const upload = multer()
 const speech = require('@google-cloud/speech');
-const fs = require('fs')
+const gcsHelpers = require('../helpers/gcsHelpers');
+const { storage } = gcsHelpers;
+const { uploadFile } = require('../middlewares/gcsUpload')
+const DEFAULT_BUCKET_NAME = 'pujangga-senja-image';
 
-router.post('/audio', upload.single('fileName'), (req, res, next) => {
+router.post('/audio', upload.single('filename'), (req, res, next) => {
   async function main() {
-    
     // Creates a client
     const client = new speech.SpeechClient({
       projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
@@ -41,7 +43,10 @@ router.post('/audio', upload.single('fileName'), (req, res, next) => {
     res.status(200).json(transcription)
   }
   main().catch(console.error);
+})
 
+router.post('/upload',uploadFile.single('filename'), function (req,res,next) {
+  console.log(req.body)
 })
 
 module.exports = router
