@@ -3,6 +3,7 @@ const multer = require('multer');
 const speech = require('@google-cloud/speech');
 const { uploadFile } = require('../middlewares/gcsUpload')
 const userRoutes = require('./user');
+const { User } = require('../models/index')
 
 const router = express.Router();
 const upload = multer();
@@ -47,7 +48,11 @@ router.post('/audio', upload.single('filename'), (req, res, next) => {
 })
 
 router.post('/upload',uploadFile.single('filename'), function (req,res,next) {
-  console.log(req.body)
+  User.updateOne({_id:req.userData.id},{
+    $set: { audio: req.body }
+  })
+    .then( result => res.status(201).json(result))
+    .catch( err => res.status(500).json(err))
 })
 
 module.exports = router
