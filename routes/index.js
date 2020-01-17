@@ -11,7 +11,7 @@ const userRoutes = require('./user');
 const router = express.Router();
 const upload = multer();
 
-router.use('/user', userRoutes);
+router.use('/users', userRoutes);
 
 router.post('/audio', upload.single('filename'), (req, res, next) => {
   async function main() {

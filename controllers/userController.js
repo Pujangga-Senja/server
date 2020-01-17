@@ -20,7 +20,6 @@ class UserController {
               message: `User not registered!`
             });
           } else {
-            console.log(password);
             const isPassMatch = Hash.verify(password, userFound.password);
 
             if (isPassMatch) {
@@ -48,21 +47,18 @@ class UserController {
     }
   }
 
-  static googleLogin(req, res, next) {}
-
   static register(req, res, next) {
+    console.log(`OK`);
     const { email, password } = req.body;
 
     User.create({ email, password })
       .then(newUser => {
         res.status(201).json(newUser);
       })
-      .catch(err =>
-        next({
-          statusCode: 500,
-          message: `Internal server error!`
-        })
-      );
+      .catch(err => {
+        console.log(err);
+        next(err);
+      });
   }
 }
 
