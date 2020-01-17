@@ -4,6 +4,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const routes = require('./routes');
 
 const app = express();
@@ -18,6 +19,7 @@ mongoose
   .then(() => {
     console.log('MongoDB connected successfully!');
 
+    app.use(cors());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(express.static('public'));
