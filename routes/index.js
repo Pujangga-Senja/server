@@ -1,11 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const speech = require('@google-cloud/speech');
-const gcsHelpers = require('../helpers/gcsHelpers');
-const { storage } = gcsHelpers;
 const { uploadFile } = require('../middlewares/gcsUpload')
-const DEFAULT_BUCKET_NAME = 'pujangga-senja-image';
-const fs = require('fs');
 const userRoutes = require('./user');
 
 const router = express.Router();
@@ -48,7 +44,6 @@ router.post('/audio', upload.single('filename'), (req, res, next) => {
     res.status(200).json(transcription);
   }
   main().catch(console.error);
-<<<<<<< HEAD
 })
 
 router.post('/upload',uploadFile.single('filename'), function (req,res,next) {
@@ -56,8 +51,3 @@ router.post('/upload',uploadFile.single('filename'), function (req,res,next) {
 })
 
 module.exports = router
-=======
-});
-
-module.exports = router;
->>>>>>> user register & login selesai
