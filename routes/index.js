@@ -1,19 +1,24 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
 const multer = require('multer');
-const upload = multer()
 const speech = require('@google-cloud/speech');
 const gcsHelpers = require('../helpers/gcsHelpers');
 const { storage } = gcsHelpers;
 const { uploadFile } = require('../middlewares/gcsUpload')
 const DEFAULT_BUCKET_NAME = 'pujangga-senja-image';
+const fs = require('fs');
+const userRoutes = require('./user');
+
+const router = express.Router();
+const upload = multer();
+
+router.use('/user', userRoutes);
 
 router.post('/audio', upload.single('filename'), (req, res, next) => {
   async function main() {
     // Creates a client
     const client = new speech.SpeechClient({
       projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
-      keyFilename: process.env.GOOGLE_CLOUD_KEYFILE,
+      keyFilename: process.env.GOOGLE_CLOUD_KEYFILE
     });
 
     // The name of the audio file to transcribe
@@ -24,25 +29,26 @@ router.post('/audio', upload.single('filename'), (req, res, next) => {
 
     // The audio file's encoding, sample rate in hertz, and BCP-47 language code
     const audio = {
-      content: audioBytes,
+      content: audioBytes
     };
     const config = {
       encoding: 'FLAC',
-      languageCode: 'id-ID',
+      languageCode: 'id-ID'
     };
     const request = {
       audio: audio,
-      config: config,
+      config: config
     };
 
     const [response] = await client.recognize(request);
     const transcription = response.results
       .map(result => result.alternatives[0].transcript)
-      .join('\n')
+      .join('\n');
     console.log(`Transcription: ${transcription}`);
-    res.status(200).json(transcription)
+    res.status(200).json(transcription);
   }
   main().catch(console.error);
+<<<<<<< HEAD
 })
 
 router.post('/upload',uploadFile.single('filename'), function (req,res,next) {
@@ -50,3 +56,8 @@ router.post('/upload',uploadFile.single('filename'), function (req,res,next) {
 })
 
 module.exports = router
+=======
+});
+
+module.exports = router;
+>>>>>>> user register & login selesai
